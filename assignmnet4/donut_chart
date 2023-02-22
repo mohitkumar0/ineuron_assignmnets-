@@ -1,0 +1,74 @@
+-----CREATE TABLES -------
+CREATE or replace TABLE STATE_Regions (
+	STATE_CODE VARCHAR(3), 
+	STATE_NAME VARCHAR(30) , 
+	REGION VARCHAR(10)
+	
+);
+CREATE  or replace TABLE Complains_Data (
+	ID DECIMAL(38, 0) NOT NULL, 
+	ComplainDate VARCHAR(10) NOT NULL, 
+	CompletionDate VARCHAR(10), 
+	CustomerID DECIMAL(38, 0) NOT NULL, 
+	BrokerID DECIMAL(38, 0) NOT NULL, 
+	ProductID DECIMAL(38, 0) NOT NULL, 
+	ComplainPriorityID DECIMAL(38, 0) NOT NULL, 
+	ComplainTypeID DECIMAL(38, 0) NOT NULL, 
+	ComplainSourceID DECIMAL(38, 0) NOT NULL, 
+	ComplainCategoryID DECIMAL(38, 0) NOT NULL, 
+	ComplainStatusID DECIMAL(38, 0) NOT NULL, 
+	AdministratorID varchar(30), 
+	ClientSatisfaction VARCHAR(3), 
+	ExpectedReimbursement DECIMAL(38, 2) NOT NULL
+);
+
+CREATE TABLE Regions (
+    id int ,
+    name varchar(60),
+    country varchar(100),
+	STATE_CODE VARCHAR(3), 
+	STATE_NAME VARCHAR(35) 
+	
+	
+);
+DROP TABLE "ASSIGNMNET"."PUBLIC"."`CUSTOMERS`";
+CREATE OR REPLACE TABLE Customers (
+	CustomerID DECIMAL(38, 0) NOT NULL, 
+	LastName VARCHAR(21) NOT NULL, 
+	FirstNamE VARCHAR(10), 
+	BirthDate VARCHAR(10), 
+	Gender VARCHAR(6), 
+	ParticipantTypE VARCHAR(10) NOT NULL, 
+	RegionID DECIMAL(38, 0) NOT NULL, 
+	MaritalStatus VARCHAR(8)
+);
+
+CREATE  or replace TABLE STATUS_HISTORY (
+	ID_DECIMAL INT, 
+	ComplainID INT NOT NULL, 
+	ComplainStatusID DECIMAL(38, 0) NOT NULL, 
+    STATUS_DATE VARCHAR(30)
+	
+);
+--- CREATE MASTER TABLE FOR COUNT NO OF COMPLAINT IN EACH REGION IN SQL AND POWER BI -----
+create or replace view master_table as
+SELECT D.CUSTOMERID,D.ID,C.FIRSTNAME,R.STATE_CODE,S.REGION
+FROM Complains_Data D
+LEFT OUTER JOIN CUSTOMERS C ON D.CustomerID = C.CustomerID 
+LEFT OUTER JOIN Regions R ON C.REGIONID = R.id
+left outer join STATE_Regions S  ON R.STATE_CODE = S.STATE_CODE 
+AND R.STATE_NAME = S.STATE_NAME;
+.............................................................................
+
+----fecthing the details of how many complaints are rising in each region ---
+SELECT region ,count(COMPLAINID) FROM master_table_COMPT
+group by 1
+order by 1;----THIS ISWRONG JOINING  ---
+
+--its result of above query -----------
+MIDWEST 1116
+NORTHEST 672
+SOUTH 1112
+WEST 1170 
+
+
