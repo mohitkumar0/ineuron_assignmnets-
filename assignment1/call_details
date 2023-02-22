@@ -1,0 +1,157 @@
+--------------------------------------- task 1 table creation----------------------------------
+ create table shopping_history(
+ product varchar not null ,
+ quantity int not null ,
+ unit_price  int not null 
+   
+);
+
+insert into shopping_history values ( 'milk',3,10);
+insert into shopping_history values ( 'bread',7,3);
+insert into shopping_history values ( 'bread',5,2);
+
+SELECT * from shopping_history;
+
+-------------------------------------------task 1--------------------------------
+select product,sum(unit_price * quantity) from  shopping_history group by product 
+
+
+----------------------------task 2 table creations----------------------------
+
+create table phones(
+name varchar(20) not null unique ,
+  phone_number int not null unique
+)
+
+create table calls(
+id int not null unique ,
+caller int not null,
+callee int not null ,
+duration int not null 
+)
+
+insert into phones values ( 'jack',1234),
+('Lena',3333),
+('Mark',9999),
+('Anna',7582)
+
+
+
+insert into calls values (25,1234,7582,8),
+(7,9999,7582,1),
+(18,9999,3333,4),
+(2,7582,3333,3),
+(3,3333,1234,1),
+(21,3333,1234,1)
+
+select * from calls;
+select * from phones;
+-----------------------------task 2 answer------------------------------
+-----------example 1----
+with out_come as(
+select caller as phone_number, sum(duration) as duration from calls group by caller
+union all 
+select callee as phone_number, sum(duration) as duration from calls group by callee)
+select name from  phones
+join out_come on out_come.phone_number = phones.phone_number
+group by name
+having sum(duration) >= 10
+order by name 
+-----------------------------------------------------------------------------------
+----------------------table creations for example 2--------
+create table phone(
+name varchar(20) not null unique ,
+  phone_number int not null unique
+)
+
+create table  callss(
+id int not null unique ,
+caller int not null,
+callee int not null ,
+duration int not null 
+)
+drop table call
+insert into phone values ( 'jhon',6356),
+('Addison',4315),
+('kate',8003),
+('Ginny',9831)
+
+select * from phone
+
+insert into callss values (65,8003,9831,7),
+(100,9831,8003,3),
+(145,4315,9851,18)
+-------------------------------------------answer exp 2----------------------------
+with least as (
+select caller as phone_number ,sum(duration) as duration  from callss group by caller
+union all 
+select callee as phone_number , sum(duration) as duration  from callss group by callee)
+select name from phone
+join least on  least.phone_number = phone.phone_number
+group by name
+having sum(duration) >= 10
+order by name 
+
+-------------------------------table creations --------------------------------------
+
+create table transactions(
+   amount  int not null,
+   date_transaction date not null
+)
+
+insert into transactions values (-10,'2020-01-14'),
+(-75,'2020-01-20'),
+(-5,'2020-01-25'),
+(-4,'2020-01-29'),
+(2000,'2020-03-10'),
+(-75,'2020-03-12'),
+(-20,'2020-03-15'),
+(40,'2020-03-15'),
+(-50,'2020-03-17'),
+(200,'2020-10-10'),
+(-200,'2020-10-10')
+
+-----------------------------------------------------answer 1 .................................
+with last_month as(
+select sum( amount) AS TOTAL_balance  from transactions)
+select (total_balance -55) from last_month 
+----------------------------------------------------------------------------------------------
+
+create table transactionss(
+   amount  int not null,
+   date_transaction date not null
+)
+
+insert into transactionss values (1,'2020-06-29'),
+(35,'2020-02-20'),
+(-50,'2020-02-03'),
+(-1,'2020-02-26'),
+(-200,'2020-08-01'),
+(-44,'2020-02-07'),
+(-5,'2020-02-25'),
+(1,'2020-06-29'),
+(1,'2020-06-29'),
+(-100,'2020-12-29'),
+(-100,'2020-12-30'),
+(-100,'2020-12-31')
+select * from transactionss
+----------------------------------------answer 2----------------------------------
+with last_year as(
+select sum(amount) as total_bal from transactionss)
+select (total_bal -50) from last_year
+-----------------------------------------------------------------------------------
+create table transactiones(
+   amount  int not null,
+   date_transaction date not null
+)
+
+insert into transactiones values (6000,'2020-04-03'),
+(5000,'2020-04-02'),
+(4000,'2020-04-01'),
+(3000,'2020-03-01'),
+(2000,'2020-02-01'),
+(1000,'2020-01-01')
+--------------------------------------answer 3-----------------------------
+with last_month as(
+select sum(amount) as total_bal from transactiones)
+select (total_bal - 60 ) from last_month 
